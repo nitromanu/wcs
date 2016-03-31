@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Voucher</title>
+</head>
+<body>
+<form method="post" action="">
+    {% csrf_token %}
+    Enter Number:<input id="voucher_count" name="voucher_count" type="text">
+    <br>
+    Enter A code : <input id = "agent_code" name="agent_code" type="text">
+    <br>
+    Enter product id : <input id = "category_code" name="category_code" type="text">
+    <br>
+    Enter Amount : <input id = "amount" name="amount" type="text">
+    <br>
+    <input type="submit">
+
+
+
+</form>
+
+</body>
+</html>

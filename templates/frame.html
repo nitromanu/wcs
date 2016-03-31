@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Exam</title>
+  {% load staticfiles %}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link href="https://dl.dropboxusercontent.com/spa/0cc22uwk8niobo3/StartMyTest/public/css/custom.css" rel="stylesheet"/>
+  <script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.css">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.theme.css">
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.js"></script>  
+
+</head>
+<body>
+
+<div class="container-fluid">
+
+<div class="header row"> 
+<div class="time_remain col-sm-6 col-xs-6 col-md-6 col-ld-6" id="time"></div>
+
+<a href="/logout"><div class="logout col-sm-6 col-xs-6 col-md-6 col-ld-6">Logout</div></a>
+</div>
+    
+    
+
+  <div class="row frame">
+    <div class="col-sm-9 col-xs-9 col-md-9 col-ld-9 question_wrapper ">
+        <div class="owl-carousel noselect" id="question_frame">
+
+            {{ item.question|safe }}
+            {% autoescape off %}
+            {% for item in questionData %}
+            <div class = "question_wrapper" id="qid_{{ forloop.counter0 }}">
+                <div class="row questions">
+                    <p class="question_no"><b>Question No : {{ forloop.counter }}</b></p>
+                    {{item.question}}   
+                </div>
+                
+                <div class="row no-gutters choice_label_choice">            
+                    <div class="col-sm-1 col-xs-1 col-md-1 col-ld-1 answer_choice_label_div">
+                    A
+                    </div>
+                    <div class="col-sm-11 col-xs-11 col-md-11 col-ld-11 answer_choice_div"  id="a">
+                    {{item.answerA}}
+
+                    </div>
+
+                </div>
+
+
+                
+                
+                <div class="row no-gutters choice_label_choice">
+                    <div class="col-sm-1 col-xs-1 col-md-1 col-ld-1 answer_choice_label_div">
+                    B
+                    </div>
+                    
+                    <div class="col-sm-11 col-xs-11 col-md-11 col-ld-11 answer_choice_div" id="b">
+                        {{item.answerB}}
+                    </div>
+                </div>
+                
+                
+                <div class="row no-gutters choice_label_choice">
+                    <div class="col-sm-1 col-xs-1 col-md-1 col-ld-1 answer_choice_label_div">
+                        C
+                    </div>
+                    
+                    <div class="col-sm-11 col-xs-11 col-md-11 col-ld-11 answer_choice_div" id="c">
+                        {{item.answerC}}
+                    </div>
+                </div>
+                
+                <div class="row no-gutters choice_label_choice">
+                <div class="col-sm-1 col-xs-1 col-md-1 col-ld-1 answer_choice_label_div">
+                    D
+                </div>
+                    
+                <div class="col-sm-11 col-xs-11 col-md-11 col-ld-11 answer_choice_div" id="d">
+                    {{item.answerD}}
+                </div>
+                </div> 
+            </div>
+            {% endfor %}
+            {% endautoescape %}
+            
+        </div>    
+    </div>  <!-- End of question_frame -->
+
+
+    <div class="col-sm-3 col-xs-3 col-md-3 col-ld-3 question_status_wrapper">
+        {% for item in questionData %}
+        <div class="question_attempt_status" id="{{ forloop.counter0 }}">{{ forloop.counter }}</div>
+        {% endfor %}
+
+    </div>
+  </div>
+    
+    <div class="row status_bar">
+   
+    <div class="col-sm-3 col-xs-3 col-md-1 col-ld-1 back noselect"><div>Back</div></div>
+    <div class="col-sm-3 col-xs-3 col-md-1 col-ld-1 next noselect"><div>Next</div></div>
+    <div class="col-sm-3 col-xs-3 col-md-1 col-ld-1 reset noselect"><div>Reset</div></div>
+    <div class="col-sm-0 col-xs-0 col-md-6 col-ld-6 "></div>
+    <div class="col-sm-3 col-xs-3 col-md-1 col-ld-1  time_bar noselect" id ="submit" onclick="dataSubmitConfirm()"><div>Submit</div></div>
+    </div>
+    
+    
+</div>
+<form action="/submit/"  method="POST" id="studentResponseForm">
+      {% csrf_token %}
+      <input type="hidden" id="questionID" name="questionID" value="{{qid}}">
+      <input type="hidden" id="categoryCode" name="categoryCode" value="{{categoryCode}}">
+      <input type="hidden" id="studentResponse" name="studentResponse" value="">
+</form>
+
+</body>
+
+<script type="text/javascript">
+
+    var current_carousel_index = 0;
+{#    var answer = new Array(10+1).join('0').split('').map(parseInt);#}
+    var reset_div_id = 0;
+
+    var counter = 0;
+    var minCount = 0;
+    var RemainingMinutes = {{ totalTime }};
+    var RemainingSeconds = 0;
+    var timeCounter =0 ;
+
+    var answerChoice;
+    var parentAnswer;
+    var result;
+    var newTime;
+    var time_temp_store = 0;
+    var new_skip_time = 0;
+    var questionID = "{{qid}}";
+    var categoryCode = "{{ categoryCode }}"
+    var answer = new Array({{totalQuesions}}+1).join('0').split('').map(parseInt);
+    var submit_text = "";
+    
+    $(document).ready(function() {
+      var owl = $("#question_frame");
+      owl.owlCarousel({
+      navigation : false,
+      slideSpeed : 0,
+      paginationSpeed : 400,
+      singleItem : true,
+      autoPlay:false,
+      rewindNav:false,
+      touchDrag:false,
+      mouseDrag:false,
+      afterAction : afterAction,
+      beforeMove : beforeMove,
+      pagination:false
+      });
+
+
+
+
+    function beforeMove(){
+        time_temp_store = answer[current_carousel_index][1];
+        if (null == time_temp_store){
+        time_temp_store = 0;
+        }
+        new_skip_time = time_temp_store+timeCounter;
+        answer[current_carousel_index] = [answerChoice,new_skip_time];
+    }
+    
+    
+
+    function afterAction(){
+    timeCounter = 0;
+    current = this.owl.currentItem;
+    current_carousel_index = this.owl.currentItem;
+      }
+
+    $(".next").click(function(){  
+      owl.trigger('owl.next');
+      })
+
+    $(".back").click(function(){
+      owl.trigger('owl.prev');
+      })
+
+     $(".question_attempt_status").click(function(){
+        var id = parseInt($(this).attr('id'));
+        owl.trigger('owl.goTo',id);
+    })
+
+});
+
+
+function dataSubmitConfirm() {
+    
+    var r = confirm("Did you finish the test. Once submit you won't be able to attempt it again. Click OK to Submit Otherwise click Cancel");
+      if (r == true) {
+          dataSubmit();
+      } else {
+          submit_text = "cancel submit";
+      }
+    }
+
+
+    function dataSubmit() {
+        $.blockUI();
+        time_temp_store = answer[current_carousel_index][1];
+        if (null == time_temp_store){
+        time_temp_store = 0;
+        }
+        new_skip_time = time_temp_store+timeCounter;
+{#        answer[current_carousel_index] = [answerChoice,new_skip_time];#}
+        answer[current_carousel_index][1] = new_skip_time;
+        document.getElementById('studentResponse').value = JSON.stringify(answer);
+        document.getElementById("studentResponseForm").submit();
+    }
+
+//This defines the counter function
+
+setInterval(function () {
+    //Here the variable minCount means minute count, when minute reaches 10 test expires
+  if (RemainingMinutes===0 && RemainingSeconds===0)
+{
+  document.getElementById("time").innerHTML = 'DONE';
+  dataSubmit();
+  // document.getElementById("test").innerHTML = "Time Finished";
+}
+else{
+
+if(RemainingSeconds===0){
+  RemainingMinutes = RemainingMinutes-1;
+  RemainingSeconds= 59;
+}
+
+  ++counter;
+  --RemainingSeconds;
+  
+  if(counter===60){
+    ++minCount;
+    counter = 0;
+  }
+
+
+
+  document.getElementById("time").innerHTML = RemainingMinutes+' MIN '+RemainingSeconds+' SEC ';
+}
+  
+  
+++timeCounter;
+}, 1000);
+
+
+
+
+    $('.question_wrapper').on('click','.answer_choice_div',function () 
+    {
+        $(this).parent().parent().find('.answer_choice_div').css('background-color', '#ffffff');
+        $(this).parent().parent().find('.answer_choice_div').css('color', '#000000');
+        $(this).css('background-color', '#002D00');
+        $(this).css('color', '#ffffff');
+        $("#".concat(current_carousel_index)).css('background-color', '#002D00');
+        $("#".concat(current_carousel_index)).css('color', '#ffffff');
+    });
+
+    $('.reset').on('click',function(){
+        // This function reset the color of that current question slide to white
+        reset_div_id = "#qid_".concat(current_carousel_index);           
+        $( reset_div_id ).find(".answer_choice_div").css( 'background-color', '#ffffff' );
+        $( reset_div_id ).find(".answer_choice_div").css( 'color', '#000000' );
+        $("#".concat(current_carousel_index)).css('background-color', '');
+        $("#".concat(current_carousel_index)).css('color', '#000000');
+        answerChoice = 0;
+
+        // The following code update the time required before updation
+
+        time_temp_store = answer[current_carousel_index][1];
+        if (null == time_temp_store){
+        time_temp_store = 0;
+        }
+        new_skip_time = time_temp_store+timeCounter;
+        answer[current_carousel_index] = [answerChoice,new_skip_time];
+       
+        // document.getElementById("test123").innerHTML = JSON.stringify(answer);
+        });
+
+    $(".answer_choice_div").click(function() {
+      answerChoice = $(this).attr('id');    
+      parentAnswer = $(this).parent().parent().attr('id');
+      result = parseInt(parentAnswer.substring(4));
+      timeBuffer = answer[current_carousel_index][1];
+      if (null == timeBuffer){
+        timeBuffer = 0;
+      }
+      newTime = timeBuffer+timeCounter;
+      answer[current_carousel_index] = [answerChoice,newTime];
+    });
+    
+  
+
+</script>
+<script type="text/javascript" src="https://dl.dropboxusercontent.com/spa/0cc22uwk8niobo3/StartMyTest/public/js/jquery.blockUI.js"></script>
+
+</html>

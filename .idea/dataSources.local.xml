@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal">
+    <data-source name="MySQL - wwcs@localhost" uuid="4f038198-f542-444c-bf7d-a75c14ae051a">
+      <secret-storage>master_key</secret-storage>
+      <user-name>root</user-name>
+      <schema-pattern>wwcs.*</schema-pattern>
+      <default-schemas>wwcs.*</default-schemas>
+    </data-source>
+  </component>
+</project>

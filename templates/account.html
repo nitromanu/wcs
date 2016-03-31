@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, user-scalable=no">
+<meta name="description" content="">
+<meta name="author" content="">
+<title>StartMyTest</title>
+
+<!-- Bootstrap core CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<!-- Custom CSS -->
+<link href="https://dl.dropboxusercontent.com/spa/0cc22uwk8niobo3/StartMyTest/public/css/waccount.css" rel="stylesheet"/>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<link href="https://dl.dropboxusercontent.com/spa/0cc22uwk8niobo3/StartMyTest/public/css/animate-custom.css" rel="stylesheet">
+<link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/alertifyjs/1.6.1/css/alertify.min.css"/>
+    <!-- Default theme -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/alertifyjs/1.6.1/css/themes/default.min.css"/>
+    <!-- Semantic UI theme -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/alertifyjs/1.6.1/css/themes/semantic.min.css"/>
+    <!-- Bootstrap theme -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/alertifyjs/1.6.1/css/themes/bootstrap.min.css"/>
+
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body data-spy="scroll" data-offset="0" data-target="#navbar-main">
+
+  {% include 'navigation.html' %}
+
+<!-- ==== HEADERWRAP ==== -->
+    <div class="container">
+
+
+        <div class="row performance">
+            <div class="col-md-7 my-tests">
+                <h2>Weekly Quiz</h2>
+            <b> Subscription End Date :</b> {% if subscription.end_date == None %} You have not activated {% else %}{{ subscription.end_date|date:"M d, Y" }} {% endif %}
+                <div class="row week-quiz">
+                    <div class="quiz-head">
+                        WWCS QUIZ : 01/04/2016 - 08/04/2016
+                    </div>
+                    <div class="quiz-description">
+                        <h2>Walk With a Civil Servant Quiz</h2>
+                    </div>
+                    {% if is_active %}
+                        <a href="/attempt/">
+                            <div class="quiz-attempt">
+                            Attempt Now
+                            </div>
+                        </a>
+                        {% else %}
+                    <div class="quiz-subscribe">
+                        Subscribe Now
+                    </div>
+                    {% endif %}
+
+                </div>
+            </div>
+
+            <div class="graph col-md-5">
+                        <h2> Leader Board</h2>
+
+                <div class="student-name row">
+                    <div class="col-md-3 student-photo"> Photo</div>
+                    <div class="col-md-9 student-details">
+                    <b>Manu Kurakar</b>
+                        <br>
+                    St. Gregorious Higher Seconday, Kottarakara
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        
+        
+        
+        
+    </div>
+    
+
+
+
+  <div id="footerwrap">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8"> <span class="copyright">Copyright &copy; 2015 StartMyTest. <a href="http://www.startmytest.com/terms" rel="nofollow">Terms and Conditions</a></span> </div>
+        <div class="col-md-4">
+          <ul class="list-inline social-buttons">
+            <li><a href="#"><i class="fa fa-twitter"></i></a> </li>
+            <li><a href="#"><i class="fa fa-facebook"></i></a> </li>
+            <li><a href="#"><i class="fa fa-google-plus"></i></a> </li>
+            <li><a href="#"><i class="fa fa-linkedin"></i></a> </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+<!-- Bootstrap core JavaScript
+    ================================================== --> 
+<!-- Placed at the end of the document so the pages load faster --> 
+  <script type="text/javascript" src="https://dl.dropboxusercontent.com/spa/0cc22uwk8niobo3/StartMyTest/public/js/modernizr.custom.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.js"></script>
+  <script type="text/javascript" src="https://dl.dropboxusercontent.com/spa/0cc22uwk8niobo3/StartMyTest/public/js/retina.js"></script>
+  <script type="text/javascript" src="https://dl.dropboxusercontent.com/spa/0cc22uwk8niobo3/StartMyTest/public/js/jquery.easing.1.3.js"></script>
+  <script type="text/javascript" src="https://dl.dropboxusercontent.com/spa/0cc22uwk8niobo3/StartMyTest/public/js/smoothscroll.js"></script>
+  <script type="text/javascript" src="https://dl.dropboxusercontent.com/spa/0cc22uwk8niobo3/StartMyTest/public/js/jquery-func.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-beta1/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js"></script>
+   <script src="//cdn.jsdelivr.net/alertifyjs/1.6.1/alertify.min.js"></script>
+    <script>
+
+
+    var current = 0;
+        $('.quiz-subscribe').click(function(){
+            var current = $(this);
+            alertify.prompt('Enter your voucher code and click ok', '',
+                   function(evt, value)
+                   {
+                       $.ajax
+                       ({
+                            type: "POST",
+                            url: "/vpay/",
+                            data:
+                            {
+                                'voucher_code_input': value,
+                                'csrfmiddlewaretoken': '{{ csrf_token }}'
+                            },
+                           dataType: "json",
+                            success: function(response)
+                            {
+{#                                alertify.message('Status: ' + response.message);#}
+                                if(response.status == 'success')
+                                {
+                                    current.parent().replaceWith('<a href="/attempt/"><div class="voucher-success"> Attempt Now</div></a>');
+                                    alertify.notify( response.message, 'success', 5, function(){  console.log('dismissed'); });
+                                }
+
+                                else
+                                {
+                                     alertify.error(response.message);
+                                }
+
+                            },
+                            error: function(rs, e) {
+                                alertify.error(rs.responseText);
+
+                             }
+                       });
+{#                       alertify.message('You entered: ' + product_code);#}
+                   }
+            );
+        });
+
+
+    alertify.defaults = {
+        // dialogs defaults
+        modal:true,
+        basic:false,
+        frameless:false,
+        movable:true,
+        moveBounded:false,
+        resizable:true,
+        closable:true,
+        closableByDimmer:true,
+        maximizable:true,
+        startMaximized:false,
+        pinnable:true,
+        pinned:true,
+        padding: true,
+        overflow:true,
+        maintainFocus:true,
+        transition:'pulse',
+        autoReset:true,
+
+        // notifier defaults
+        notifier:{
+            // auto-dismiss wait time (in seconds)
+            delay:5,
+            // default position
+            position:'bottom-right'
+        },
+
+        // language resources
+        glossary:{
+            // dialogs default title
+            title:'Activate',
+            // ok button text
+            ok: 'OK',
+            // cancel button text
+            cancel: 'CANCEL'
+        },
+
+        // theme settings
+        theme:{
+            // class name attached to prompt dialog input textbox.
+            input:'ajs-input',
+            // class name attached to ok button
+            ok:'ajs-ok',
+            // class name attached to cancel button
+            cancel:'ajs-cancel'
+        }
+    };
+        
+
+
+        
+       
+    </script>
+
+<style>
+
+    .voucher-success
+    {
+        background-color: cadetblue;
+        color: white;
+        min-height: 50px;
+        text-align: center;
+        font-size: 30px;
+        font-weight: bolder;
+    }
+
+    .quiz-subscribe
+    {
+        background-color: cadetblue;
+        color: gold;
+        min-height: 50px;
+        text-align: center;
+        font-size: 30px;
+        font-weight: bolder;
+    }
+</style>
+    
+
+</body>
+</html>
