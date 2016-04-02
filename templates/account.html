@@ -49,11 +49,13 @@
             <b> Subscription End Date :</b> {% if subscription.end_date == None %} You have not activated {% else %}{{ subscription.end_date|date:"M d, Y" }} {% endif %}
                 <div class="row week-quiz">
                     <div class="quiz-head">
-                        WWCS QUIZ : 01/04/2016 - 08/04/2016
+                        WWCS QUIZ : {{ question_data.startDate|date:"M d, Y" }} - {{ question_data.endDate|date:"M d, Y" }}
                     </div>
                     <div class="quiz-description">
                         <h2>Walk With a Civil Servant Quiz</h2>
                     </div>
+                {% if question_active %}
+
                     {% if is_active %}
                         <a href="/attempt/">
                             <div class="quiz-attempt">
@@ -65,6 +67,12 @@
                         Subscribe Now
                     </div>
                     {% endif %}
+
+                {% else %}
+                    <div class="question-not-active">
+                        Quiz For This Week Not Updated
+                    </div>
+                {% endif %}
 
                 </div>
             </div>

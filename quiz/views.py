@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse,HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from quiz.models import Questions as questions
 from result.models import studentResponse
@@ -7,34 +7,37 @@ from django.db.models import Q
 import datetime
 import json
 
+
 # Create your views here.
 @login_required(login_url='/login/')
 def attempt_quiz(request):
     username = request.user.username
     date_today = datetime.date.today()
-    question_data = questions.objects.filter(Q(startDate__lte=date_today) & Q( endDate__gte=date_today))
+    question_data = questions.objects.filter(Q(startDate__lte=date_today) & Q(endDate__gte=date_today))
     if question_data.exists():
         question_data_from_database = question_data[0]
         question_id = question_data_from_database.questionSetID
-        if check_user_attempted_question_set(username,question_id):
+        if check_user_attempted_question_set(username, question_id):
             questions_to_display = json.loads(question_data_from_database.questionsJson)
             total_questions = len(questions_to_display)
             total_time = question_data_from_database.totalTime
             category_code = question_data_from_database.categoryCode
             context = {
-                'qid':question_id,
-                'categoryCode':category_code,
-                'questionData':questions_to_display,
-                'totalQuesions':total_questions,
-                'totalTime':total_time
+                'qid': question_id,
+                'categoryCode': category_code,
+                'questionData': questions_to_display,
+                'totalQuesions': total_questions,
+                'totalTime': total_time
             }
-            return render(request,'frame.html',context)
+            return render(request, 'frame.html', context)
         else:
-            redirect_url = '/result/'+question_id
+            redirect_url = '/result/' + question_id
             return HttpResponseRedirect(redirect_url)
     else:
         return HttpResponse('Question Set Not Exist')
 
+
+@login_required(login_url='/login/')
 def get_student_response(request):
     if request.method == 'POST':
         student_response_data = request.POST
@@ -46,7 +49,7 @@ def get_student_response(request):
         question_data_from_database, student_response_valid = fetch_question_data_and_validate(question_set_id,
                                                                                                student_response_in_json)
         if question_set_exist(question_set_id) and student_response_valid and \
-                check_user_attempted_question_set(username,question_set_id):
+                check_user_attempted_question_set(username, question_set_id):
 
             """
             We have validated the student response we received from user and it is correct.
@@ -87,7 +90,8 @@ def get_student_response(request):
 
                 """ Here we check whether the student un-attempted a question"""
                 if student_response_in_json[iterator] == 0 or student_response_in_json[iterator] == None or \
-                                student_response_in_json[iterator][0] == None or student_response_in_json[iterator][0]==0:
+                                student_response_in_json[iterator][0] == None or student_response_in_json[iterator][
+                    0] == 0:
                     if student_response_in_json[iterator] == 0 or student_response_in_json[iterator] == None:
                         unattempt_in_each_section[current_section] += 1
                         iterator += 1
@@ -138,7 +142,7 @@ def get_student_response(request):
                                              totalUnAttempted=total_unattempted, totalAttempted=total_attempted)
             student_result.save()
 
-            redirect_url = "/result/"+question_set_id+"/"
+            redirect_url = "/result/" + question_set_id + "/"
 
             return HttpResponseRedirect(redirect_url)
 
@@ -165,7 +169,7 @@ def fetch_question_data_and_validate(question_set_id, student_response):
 
 
 def check_user_attempted_question_set(username, question_set_id):
-    whether_already_attempted = studentResponse.objects.filter(Q(username=username)&Q(questionSetID=question_set_id))
+    whether_already_attempted = studentResponse.objects.filter(Q(username=username) & Q(questionSetID=question_set_id))
     if whether_already_attempted:
         return False
     else:

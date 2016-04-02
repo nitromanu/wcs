@@ -7,6 +7,8 @@ from models import UserProfile as user_profile
 from subscription.models import subscriptionDetails as user_subscribtion
 from result.models import studentResponse as student_response
 import datetime
+from quiz.models import Questions as questions
+from django.db.models import Q
 # Create your views here.
 
 def home(request):
@@ -79,6 +81,13 @@ def render_register(request):
 def user_home(request):
     username = request.user.username
     subscription_data = user_subscribtion.objects.filter(username = username)
+    date_today = datetime.date.today()
+    question_data = questions.objects.filter(Q(startDate__lte=date_today) & Q(endDate__gte=date_today))
+    if question_data.exists():
+        question_data = question_data[0]
+        question_active = 1
+    else:
+        question_active = 0
     if subscription_data.exists():
         subscription_data = subscription_data[0]
         if subscription_data.end_date < datetime.date.today():
@@ -90,7 +99,9 @@ def user_home(request):
         is_active = 0
     context = {
         'subscription':subscription_data,
-        'is_active':is_active
+        'is_active':is_active,
+        'question_active':question_active,
+        'question_data':question_data
     }
     return render(request,'account.html',context)
 
