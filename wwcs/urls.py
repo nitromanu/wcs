@@ -21,5 +21,6 @@ urlpatterns = patterns('',
                        url(r'^result/(\S+)/$', result_views.display_result),
                        url(r'^vpay/$', subscription_views.payment_voucher_ajax_request),
                        url(r'^vcreate/$', subscription_views.create_vouchers),
+                       url(r'^pdf/$', result_views.pdf_try),
 
 )

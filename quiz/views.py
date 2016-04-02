@@ -110,7 +110,7 @@ def get_student_response(request):
                     wrong_answers += 1
                     iterator += 1
 
-            marks_obtained = correct_answers - wrong_answers * negative_marks
+            marks_obtained = float(correct_answers - wrong_answers * negative_marks)
             total_questions = sum(questions_in_each_section)
             total_correct_answers = sum(correct_ans_each_section)
             total_wrong_answers = sum(wrong_in_each_section)
@@ -140,8 +140,8 @@ def get_student_response(request):
 
             redirect_url = "/result/"+question_set_id+"/"
 
-            #return HttpResponseRedirect(redirect_url)
-            return HttpResponse('Saved Successfully')
+            return HttpResponseRedirect(redirect_url)
+            
         else:
             return HttpResponse('Hi, Your data received is not valid, so try again')
     else:

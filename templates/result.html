@@ -33,278 +33,265 @@
 
 <!-- ==== HEADERWRAP ==== -->
     <div class="container">
-      
-        <div class="row performance">
-            <h2>SSC-CGL 2016 - TEST1</h2>
-            <div class="col-md-4 my-tests">
-                <h3>Summary</h3>
-                    <div class="attempted">
-                        <h4>TOTAL QUESTIONS</h4>
-                        {{ totalQuestions }}
-                    </div>
-                
-                    <div class="attempted">
-                        <h4>ATTEMPTED</h4>
-                       {{ attempted }}
-                    </div>
-                
-                    <div class="attempted">
-                        <h4>CORRECT ANSWER</h4>
-                      {{ correct }}
+
+
+            <div class="row analysis">
+                <div class="col-md-6 marks-details">
+                    <table class="analyze-table">
+                    <th class="table-header" colspan="2"> Analyze Yourself</th>
+                        <tr class="odd-row">
+                            <td class="descri">Total Questions</td>
+                            <td>{{ totalQuestions }}</td>
+                        </tr>
+
+                        <tr class="even-row">
+                            <td class="descri">Attempted</td>
+                            <td>{{ attempted }}</td>
+                        </tr>
+
+                        <tr class="odd-row">
+                            <td class="descri">Correct Answers</td>
+                            <td>{{ correct }}</td>
+                        </tr>
+
+                        <tr class="even-row">
+                            <td class="descri">Wrong Answers</td>
+                            <td>{{ wrong }}</td>
+                        </tr>
+
+                        <tr class="odd-row">
+                            <td class="descri"><b>Total Marks</b></td>
+                            <td><b>{{ marks }}</b></td>
+                        </tr>
+
+
+                    </table>
+                </div>
+
+
+                <div class="col-md-6 marks-details">
+                    <table class="analyze-table">
+                    <div class="section-header">Section Analysis</div>
+                    <th class="section-header"> Sections</th>
+                    <th class="section-header"> Total Questions</th>
+                    <th class="section-header"> Attempted</th>
+                    <th class="section-header"> Not Attempted</th>
+                    <th class="section-header"> Correct</th>
+                    <th class="section-header"> Wrong</th>
+                        {% for section_names,section_attempts,section_total_questions, section_correct, section_wrong , section_not_attempt in zipped_data %}
+
+                            <tr class="section-odd-row">
+                                <td class="section-header">{{ section_names }}</td>
+                                <td class="section-data">{{ section_total_questions }}</td>
+                                <td class="section-data">{{ section_attempts }}</td>
+                                <td class="section-data">{{ section_not_attempt }}</td>
+                                <td class="section-data">{{ section_correct }}</td>
+                                <td class="section-data">{{ section_wrong }}</td>
+                            </tr>
+
+
+                        {% endfor %}
+
+
+
+
+                    </table>
+                </div>
+
+
+
+
+
+
+                <div class="row questions-solutions">
+
+                    <h2> QUESTIONS & SOLUTIONS</h2>
+
+                    {% for item in questionData %}
+
+                    <div {% if forloop.counter|divisibleby:2 %}class="question-block-1"{% else %} class="question-block-2" {% endif %}>
+                        <div class="question-no">
+                        Question:{{ forloop.counter }}
+                        </div>
+                        <div class="question-data">
+
+                          {{item.question}}
+                        </div>
+                        <div class="choice">
+                            A. {{item.answerA}}
+                        </div>
+                        <div class="choice">
+                            B. {{item.answerB}}
+                        </div>
+                        <div class="choice">
+                            C. {{item.answerC}}
+                        </div>
+                        <div class="choice">
+                            D. {{item.answerD}}
+                        </div>
+                        <div class="solution">
+                            <p> Correct Answer : {{ item.correctAnswer }}</p>
+                            <p>Solution: {% if item.solution == None %}Self Explanatory {% else %}item.solution {% endif %}</p>
+                        </div>
                     </div>
 
-                    <div class="attempted">
-                        <h4>INCORRECT</h4>
-                        {{ wrong }}
-                    </div>
-
-                    <div class="attempted">
-                        <h4>MARKS SCORED</h4>
-                        {{ marks }}
-                    </div>
+                    {% endfor %}
+                </div>
             </div>
-            
-            <div class="graph col-md-8">
-                        Result
-            </div>
-        </div>
-        
-<hr>
-        <div class="row">
-            <h2> QUESTIONS & SOLUTIONS</h2>
-
-            {% for item in questionData %}
-
-            <div {% if forloop.counter|divisibleby:2 %}class="question-block-1"{% else %} class="question-block-2" {% endif %}>
-                <div class="question-no">
-                Question:{{ forloop.counter }}
-                </div>
-                <div class="question-data">
-
-                  {{item.question}}
-                </div>
-                <div class="choice">
-                    A. {{item.answerA}}
-                </div>
-                <div class="choice">
-                    B. {{item.answerB}}
-                </div>
-                <div class="choice">
-                    C. {{item.answerC}}
-                </div>
-                <div class="choice">
-                    D. {{item.answerD}}
-                </div>
-                <div class="solution">
-                    <p> Correct Answer : {{ item.correctAnswer }}</p>
-                    <p>Solution: {% if item.solution == None %}Self Explanatory {% else %}item.solution {% endif %}</p>
-                </div>
-            </div>
-
-            {% endfor %}
-            
-            
-{#            <div class="question-block-2">#}
-{#                <div class="question-no">#}
-{#                Question:1#}
-{#                </div>#}
-{#                <div class="question-data">#}
-{#                Who is the prime minister of India?#}
-{#                </div>#}
-{#                <div class="choice">#}
-{#                    1. Dr. Manmohan Singh#}
-{#                </div>#}
-{#                <div class="choice">#}
-{#                    2. Narendra Modi#}
-{#                </div>#}
-{#                <div class="choice">#}
-{#                    3. Rahul Gandhi#}
-{#                </div>#}
-{#                <div class="choice">#}
-{#                    4. Sonia Gandhi#}
-{#                </div>#}
-{#                <div class="solution">#}
-{#                    <p> Correct Answer : 2</p>#}
-{#                    <p>Solution: Self Explanatory</p>#}
-{#                </div>#}
-{#            </div>#}
-        
-        </div>
-    </div>
     
 
-  <div id="footerwrap">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-8"> <span class="copyright">Copyright &copy; 2015 StartMyTest. <a href="http://www.startmytest.com/terms" rel="nofollow">Terms and Conditions</a></span> </div>
-        <div class="col-md-4">
-          <ul class="list-inline social-buttons">
-            <li><a href="#"><i class="fa fa-twitter"></i></a> </li>
-            <li><a href="#"><i class="fa fa-facebook"></i></a> </li>
-            <li><a href="#"><i class="fa fa-google-plus"></i></a> </li>
-            <li><a href="#"><i class="fa fa-linkedin"></i></a> </li>
-          </ul>
-        </div>
-      </div>
+          <div id="footerwrap">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-8"> <span class="copyright">Copyright &copy; 2015 StartMyTest. <a href="http://www.startmytest.com/terms" rel="nofollow">Terms and Conditions</a></span> </div>
+                <div class="col-md-4">
+                  <ul class="list-inline social-buttons">
+                    <li><a href="#"><i class="fa fa-twitter"></i></a> </li>
+                    <li><a href="#"><i class="fa fa-facebook"></i></a> </li>
+                    <li><a href="#"><i class="fa fa-google-plus"></i></a> </li>
+                    <li><a href="#"><i class="fa fa-linkedin"></i></a> </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
     </div>
-  </div>
+
+</body>
 
 <!-- Bootstrap core JavaScript
     ================================================== --> 
-<!-- Placed at the end of the document so the pages load faster --> 
+<!-- Placed at the end of the document so the pages load faster -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-beta1/jquery.min.js"></script>
   <script type="text/javascript" src="https://dl.dropboxusercontent.com/spa/0cc22uwk8niobo3/StartMyTest/public/js/modernizr.custom.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.js"></script>
   <script type="text/javascript" src="https://dl.dropboxusercontent.com/spa/0cc22uwk8niobo3/StartMyTest/public/js/retina.js"></script>
   <script type="text/javascript" src="https://dl.dropboxusercontent.com/spa/0cc22uwk8niobo3/StartMyTest/public/js/jquery.easing.1.3.js"></script>
   <script type="text/javascript" src="https://dl.dropboxusercontent.com/spa/0cc22uwk8niobo3/StartMyTest/public/js/smoothscroll.js"></script>
   <script type="text/javascript" src="https://dl.dropboxusercontent.com/spa/0cc22uwk8niobo3/StartMyTest/public/js/jquery-func.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-beta1/jquery.min.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js"></script>
-    <script>
-        var ctx = document.getElementById("myChart").getContext("2d");
-        
-        var data = {
-            labels: ["Test-1", "Test-2", "Test-3", "Test-4", "Test-5", "Test-6", "Test-7", "Test-8", "Test-9", "Test-10", "Test-11", "Test-12","Test-13", "Test-14", "Test-15"],
-                    datasets: [
-                        {
-                            label: "Candidates Average Performance",
-                            fillColor: "#962B24",
-                            strokeColor: "#962B24",
-                            pointColor: "#962B24",
-                            pointStrokeColor: "#fff",
-                            pointHighlightFill: "#fff",
-                            pointHighlightStroke: "rgba(220,220,220,1)",
-                            data: [65, 59, 80, 81, 56, 55, 40, 65, 78, 21, 45, 87, 31, 25, 75]
-                        },
-                        {
-                            label: "Your Performance",
-                            fillColor: "rgba(151,187,205,0.2)",
-                            strokeColor: "#24966D",
-                            pointColor: "#24966D",
-                            pointStrokeColor: "#fff",
-                            pointHighlightFill: "#fff",
-                            pointHighlightStroke: "rgba(151,187,205,1)",
-                            data: [28, 48, 40, 19, 86, 27, 90, 12, 21, 32, 25, 45, 36, 48, 52]
-                        }
-                    ]
-                    };
-        
-        var options = {
 
-    ///Boolean - Whether grid lines are shown across the chart
-    scaleShowGridLines : true,
 
-    //String - Colour of the grid lines
-    scaleGridLineColor : "rgba(0,0,0,.05)",
 
-    //Number - Width of the grid lines
-    scaleGridLineWidth : 1,
 
-    //Boolean - Whether to show horizontal lines (except X axis)
-    scaleShowHorizontalLines: true,
+    <style>
+        .analyze
+	{
+		background-color: #000;
+		color: #fff;
+		max-height: 50px;
+		min-height: 50px;
+		font-size: 20px;
+		font-weight: bold;
+		text-align: center;
+		padding-top: 10px;
+	}
 
-    //Boolean - Whether to show vertical lines (except Y axis)
-    scaleShowVerticalLines: true,
+	.marks-details
+	{
+		max-height: 500px;
+		min-height: 500px;
+        margin-bottom: 100px;
 
-    //Boolean - Whether the line is curved between points
-    bezierCurve : false,
+	}
 
-    //Number - Tension of the bezier curve between points
-    bezierCurveTension : 0.4,
+	.analyze-table
+	{
+		width: 100%;
+	}
 
-    //Boolean - Whether to show a dot for each point
-    pointDot : true,
+	.odd-row
+	{
+		width: 100px;
+		height: 100px;
+		background-color: #BDBDBD;
+		color: white;
+		font-size: 20px;
+	}
 
-    //Number - Radius of each point dot in pixels
-    pointDotRadius : 4,
+	.odd-row:hover
+	{
+		background-color: #A4A4A4;
+	}
 
-    //Number - Pixel width of point dot stroke
-    pointDotStrokeWidth : 1,
+	.even-row
+	{
+		height: 100px;
+		background-color: #D8D8D8;
+		color: black;
+		font-size: 20px;
+	}
 
-    //Number - amount extra to add to the radius to cater for hit detection outside the drawn point
-    pointHitDetectionRadius : 20,
+	.even-row:hover
+	{
 
-    //Boolean - Whether to show a stroke for datasets
-    datasetStroke : true,
+		background-color: #E6E6E6;
+	}
 
-    //Number - Pixel width of dataset stroke
-    datasetStrokeWidth : 2,
+	.section-odd-row
+	{
+		width: 100px;
+		height: 50px;
+		background-color: #BDBDBD;
+		color: white;
+		font-size: 12px;
+	}
 
-    //Boolean - Whether to fill the dataset with a colour
-    datasetFill : true,
+	.section-odd-row:hover
+	{
+		background-color: #A4A4A4;
+	}
 
-    //String - A legend template
-{#    legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>",#}
-            
-    multiTooltipTemplate: "<%= datasetLabel %> - <%= value %>"
+	.section-even-row
+	{
+		width: 100px;
+		height: 50px;
+		background-color: #D8D8D8;
+		color: black;
+		font-size: 12px;
+	}
 
-};
-        
-        var options1 =
-            {
-    //Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value
-    scaleBeginAtZero : true,
+	.section-even-row:hover
+	{
+		background-color: #E6E6E6;
+	}
 
-    //Boolean - Whether grid lines are shown across the chart
-    scaleShowGridLines : true,
+	.section-data
+	{
+		text-align: center;
+	}
 
-    //String - Colour of the grid lines
-    scaleGridLineColor : "rgba(0,0,0,.05)",
+	.table-header
+	{
+		background-color: #B43104;
+		font-size: 20px;
+		height: 50px;
+		text-align: center;
+		color:white;
+	}
 
-    //Number - Width of the grid lines
-    scaleGridLineWidth : 1,
+	.section-header
+	{
+		background-color: #B43104;
+		font-size: 12px;
+		height: 50px;
+		text-align: center;
+		color:white;
+	}
 
-    //Boolean - Whether to show horizontal lines (except X axis)
-    scaleShowHorizontalLines: true,
+	.descri
+	{
+		padding-left: 20px;
+	}
 
-    //Boolean - Whether to show vertical lines (except Y axis)
-    scaleShowVerticalLines: true,
+    .analysis
+    {
+        margin-top: 70px;
+    }
 
-    //Boolean - If there is a stroke on each bar
-    barShowStroke : true,
 
-    //Number - Pixel width of the bar stroke
-    barStrokeWidth : 2,
+    </style>
 
-    //Number - Spacing between each of the X value sets
-    barValueSpacing : 5,
 
-    //Number - Spacing between data sets within X values
-    barDatasetSpacing : 1,
 
-    //String - A legend template
-{#    legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].fillColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>",#}
-                
-     multiTooltipTemplate: "<%= datasetLabel %> - <%= value %>"
-                
-};
-        
-        var data1 = {
-    labels: ["Attempted", "Correct", "Wrong", "Marks Scored"],
-    datasets: [
-        {
-            label: "{{ first_name }}(You)",
-            fillColor: "green",
-            strokeColor: "rgba(220,220,220,0.8)",
-            highlightFill: "green",
-            highlightStroke: "rgba(220,220,220,1)",
-            data: [{{ attempted }}, {{ correct }}, {{ wrong }}, {{ marks }}]
-        },
-        {
-            label: "Average",
-            fillColor: "blue",
-            strokeColor: "rgba(151,187,205,0.8)",
-            highlightFill: "blue",
-            highlightStroke: "rgba(151,187,205,1)",
-            data: [{{ averageAnalysis.attendedAvg }}, {{ averageAnalysis.correctAvg }}, {{ averageAnalysis.wrongAvg }}, {{ averageAnalysis.marksAvg }}]
-        }
-    ]
-};
-        var myBarChart = new Chart(ctx).Bar(data1, options1);
-        
-       
-    </script>
-    
 
-</body>
 </html>
