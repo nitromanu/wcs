@@ -141,7 +141,7 @@ def get_student_response(request):
             redirect_url = "/result/"+question_set_id+"/"
 
             return HttpResponseRedirect(redirect_url)
-            
+
         else:
             return HttpResponse('Hi, Your data received is not valid, so try again')
     else:

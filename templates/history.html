@@ -44,45 +44,29 @@
 
 
         <div class="row performance">
-            <div class="col-md-7 my-tests">
-                <h2>Weekly Quiz</h2>
-            <b> Subscription End Date :</b> {% if subscription.end_date == None %} You have not activated {% else %}{{ subscription.end_date|date:"M d, Y" }} {% endif %}
-                <div class="row week-quiz">
-                    <div class="quiz-head">
-                        WWCS QUIZ : 01/04/2016 - 08/04/2016
-                    </div>
-                    <div class="quiz-description">
-                        <h2>Walk With a Civil Servant Quiz</h2>
-                    </div>
-                    {% if is_active %}
-                        <a href="/attempt/">
-                            <div class="quiz-attempt">
-                            Attempt Now
+            <div class="col-md-9 my-tests">
+                <div class="expiry">
+                    Subscription Ends on: {% if subscription.end_date == None %} You have not activated {% else %}{{ subscription.end_date|date:"M d, Y" }} {% endif %}
+                    <br>
+                    Click to Extend Subscription
+                </div>
+
+                {% for items in student_response_data %}
+                    <div class="history">
+                        <a href="/result/{{ items.questionSetID }}">
+                            <div class="my-attempts">
+                               Test - {{ forloop.counter }}
                             </div>
                         </a>
-                        {% else %}
-                    <div class="quiz-subscribe">
-                        Subscribe Now
                     </div>
-                    {% endif %}
+                {% endfor %}
 
-                </div>
             </div>
 
-            <div class="graph col-md-5">
-                        <h2> Leader Board</h2>
 
-                <h3> Will be updated soon</h3>
+            <div class="graph col-md-3">
 
-{#                <div class="student-name row">#}
-{#                    <div class="col-md-3 student-photo"> Photo</div>#}
-{#                    <div class="col-md-9 student-details">#}
-{#                    <b>Manu Kurakar</b>#}
-{#                        <br>#}
-{#                    St. Gregorious Higher Seconday, Kottarakara#}
-{#                    </div>#}
-{##}
-{#                </div>#}
+
             </div>
         </div>
         
@@ -131,7 +115,7 @@
 
 
     var current = 0;
-        $('.quiz-subscribe').click(function(){
+        $('.expiry').click(function(){
             var current = $(this);
             alertify.prompt('Enter your voucher code and click ok', '',
                    function(evt, value)
@@ -151,7 +135,7 @@
 {#                                alertify.message('Status: ' + response.message);#}
                                 if(response.status == 'success')
                                 {
-                                    current.parent().replaceWith('<a href="/attempt/"><div class="voucher-success"> Attempt Now</div></a>');
+                                    current.replaceWith('<div class="expiry">Subscription Ends on: 12/15/2016<br> Click to Extend Subscription</div>');
                                     alertify.notify( response.message, 'success', 5, function(){  console.log('dismissed'); });
                                 }
 
@@ -247,6 +231,33 @@
         text-align: center;
         font-size: 30px;
         font-weight: bolder;
+    }
+
+    .expiry
+    {
+        background-color: #B43104;
+        color: white;
+        padding: 10px;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .my-attempts
+    {
+        padding: 20px;
+        background-color: cadetblue;
+        min-height: 50px;
+        max-height: 50px;
+        font-size: 20px;
+        color: white;
+        font-weight: bold;
+        text-align: center;
+
+    }
+    
+    .history
+    {
+        overflow: auto;
     }
 </style>
     

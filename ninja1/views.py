@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from forms import RegistrationForm, LoginForm
 from models import UserProfile as user_profile
 from subscription.models import subscriptionDetails as user_subscribtion
+from result.models import studentResponse as student_response
 import datetime
 # Create your views here.
 
@@ -97,3 +98,21 @@ def user_home(request):
 def user_logout(request):
     logout(request)
     return HttpResponseRedirect('/')
+
+def user_account(request):
+    username = request.user.username
+    subscription_data = user_subscribtion.objects.filter(username = username)
+    student_response_data = student_response.objects.filter(username = username)
+    if subscription_data.exists():
+        subscription_data = subscription_data[0]
+    else:
+        subscription_data = None
+
+    if not student_response_data.exists():
+        student_response_data = None
+
+    context = {
+        'subscription':subscription_data,
+        'student_response_data':student_response_data
+    }
+    return render(request,'history.html',context)
