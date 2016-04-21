@@ -7,14 +7,15 @@ from django.db.models import Q
 import json
 from reportlab.pdfgen import canvas
 
+
 # Create your views here.
 
 @login_required(login_url='/login/')
-def display_result(request,question_id):
+def display_result(request, question_id):
     username = request.user.username
-    result_data_from_database = studentResponse.objects.filter(Q(username=username)&Q(questionSetID=question_id))
-    question_data = Questions.objects.filter(questionSetID = question_id)
-    average_analysis_data= 0
+    result_data_from_database = studentResponse.objects.filter(Q(username=username) & Q(questionSetID=question_id))
+    question_data = Questions.objects.filter(questionSetID=question_id)
+    average_analysis_data = 0
     if average_analysis_data:
         average_analysis_data = average_analysis_data[0]
     else:
@@ -32,23 +33,25 @@ def display_result(request,question_id):
             section_total_questions = section_data_from_database['questionInSection']
             section_correct = section_data_from_database['correctAnsInSection']
             section_wrong = section_data_from_database['wrongInSection']
-            zipped_data = zip(section_names,section_attempts,section_total_questions, section_correct, section_wrong, section_not_attempt)
+            zipped_data = zip(section_names, section_attempts, section_total_questions, section_correct, section_wrong,
+                              section_not_attempt)
             context_data = {
-                'first_name':request.user.first_name,
-                'totalQuestions':result_data_from_database.totalAttempted+result_data_from_database.totalUnAttempted,
-                'attempted':result_data_from_database.totalAttempted,
-                'correct':result_data_from_database.totalCorrectAnswer,
-                'wrong':result_data_from_database.totalWrongAnswer,
-                'marks':result_data_from_database.marksObtained,
-                'sectionResult':json.loads(result_data_from_database.sectionResults),
-                'questionData':questions,
-                'zipped_data':zipped_data
+                'first_name': request.user.first_name,
+                'totalQuestions': result_data_from_database.totalAttempted + result_data_from_database.totalUnAttempted,
+                'attempted': result_data_from_database.totalAttempted,
+                'correct': result_data_from_database.totalCorrectAnswer,
+                'wrong': result_data_from_database.totalWrongAnswer,
+                'marks': result_data_from_database.marksObtained,
+                'sectionResult': json.loads(result_data_from_database.sectionResults),
+                'questionData': questions,
+                'zipped_data': zipped_data
             }
-            return render(request,'result.html',context_data)
+            return render(request, 'result.html', context_data)
         else:
             return HttpResponse('Invalid Question Set ID')
     else:
         return HttpResponse("You have not attempted this test")
+
 
 def pdf_try(request):
     response = HttpResponse(content_type='application/pdf')
@@ -63,3 +66,24 @@ def pdf_try(request):
     p.showPage()
     p.save()
     return response
+
+
+@login_required(login_url='/login/')
+def admin_result(request):
+    if request.user.is_staff:
+        # Raw Query for retreiving data from database
+        result = studentResponse.objects.raw(''' select q1.full_name ,
+                                                q1.id,
+                                                q2.questionSetID ,
+                                                q2.marksObtained
+                                                from wwcs.ninja1_userprofile as q1
+                                                INNER JOIN result_studentresponse as q2
+                                                on q1.email = q2.username ''')
+
+        context = {
+            'result_data' : result
+        }
+        return render(request, 'admin_result.html', context)
+
+    else:
+        return HttpResponse('You are not authorized');

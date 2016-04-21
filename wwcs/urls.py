@@ -23,5 +23,6 @@ urlpatterns = patterns('',
                        url(r'^vpay/$', subscription_views.payment_voucher_ajax_request),
                        url(r'^vcreate/$', subscription_views.create_vouchers),
                        url(r'^pdf/$', result_views.pdf_try),
+                       url(r'^teacher/$', result_views.admin_result),
 
 )
