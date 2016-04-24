@@ -8,7 +8,7 @@ class studentResponse(models.Model):
     questionSetID = models.CharField(max_length=255)
     response = models.TextField(default=None)
     sectionResults = models.TextField(default=None)
-    marksObtained = models.IntegerField(default=None)
+    marksObtained = models.DecimalField(default=None,max_digits=5,decimal_places=2)
     totalCorrectAnswer = models.IntegerField(default=None)
     totalWrongAnswer = models.IntegerField(default=None)
     totalTimeTaken = models.IntegerField(default=None)
