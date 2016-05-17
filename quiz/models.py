@@ -15,3 +15,10 @@ class Questions(models.Model):
 
     def __unicode__(self):
         return self.questionSetID
+
+
+class Feedback(models.Model):
+    username = models.CharField(max_length=255)
+    questionSetID = models.CharField(max_length=255)
+    feedback = models.TextField(default=None)
+

@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from result.models import studentResponse
-from django.http import HttpResponse
-from quiz.models import Questions
+from result.models import studentResponse, feedback
+from django.http import HttpResponse, Http404
+from quiz.models import Questions, Feedback
 from django.db.models import Q
 import json
 from reportlab.pdfgen import canvas
@@ -15,6 +15,11 @@ def display_result(request, question_id):
     username = request.user.username
     result_data_from_database = studentResponse.objects.filter(Q(username=username) & Q(questionSetID=question_id))
     question_data = Questions.objects.filter(questionSetID=question_id)
+    feedback_data = Feedback.objects.filter(Q(username=username) & Q(questionSetID=question_id))
+    feedback_needed = True;
+    if feedback_data.exists():
+        feedback_needed = False
+
     average_analysis_data = 0
     if average_analysis_data:
         average_analysis_data = average_analysis_data[0]
@@ -44,7 +49,10 @@ def display_result(request, question_id):
                 'marks': result_data_from_database.marksObtained,
                 'sectionResult': json.loads(result_data_from_database.sectionResults),
                 'questionData': questions,
-                'zipped_data': zipped_data
+                'zipped_data': zipped_data,
+                'question_id':question_id,
+                'username':request.user.username,
+                'feedback_needed':feedback_needed
             }
             return render(request, 'result.html', context_data)
         else:
@@ -80,10 +88,26 @@ def admin_result(request):
                                                 INNER JOIN result_studentresponse as q2
                                                 on q1.email = q2.username ''')
 
+
+
         context = {
             'result_data' : result
         }
         return render(request, 'admin_result.html', context)
 
     else:
-        return HttpResponse('You are not authorized');
+        raise Http404;
+
+
+def feedback_msg(request):
+    if request.method =='POST':
+        username = request.user.username
+        question_set = request.POST.get('question_set')
+        feedback = request.POST.get('feedback')
+        if feedback:
+            new_feedback_data = Feedback(username = username, questionSetID = question_set, feedback = feedback)
+            new_feedback_data.save();
+        data_return = {'status': request.POST.get('feedback')}
+        return HttpResponse(json.dumps(data_return), content_type='application/json')
+    else:
+        raise Http404

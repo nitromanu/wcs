@@ -31,3 +31,13 @@ class averageResult(models.Model):
 
     def __unicode__(self):
         return self.questionSetID
+
+class feedback(models.Model):
+    name = models.CharField(max_length=255)
+    username = models.CharField(max_length=255)
+    question_set = models.CharField(max_length=255)
+    feedback = models.TextField(default=None)
+
+
+    def __unicode__(self):
+        return self.question_set

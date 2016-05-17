@@ -24,5 +24,7 @@ urlpatterns = patterns('',
                        url(r'^vcreate/$', subscription_views.create_vouchers),
                        url(r'^pdf/$', result_views.pdf_try),
                        url(r'^teacher/$', result_views.admin_result),
+                       url(r'^feedback/$', result_views.feedback_msg),
+
 
 )
