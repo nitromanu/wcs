@@ -41,3 +41,13 @@ class feedback(models.Model):
 
     def __unicode__(self):
         return self.question_set
+
+
+class monthlyReport(models.Model):
+    report_id = models.CharField(max_length=255)
+    qsets_include = models.TextField(default=None)
+
+
+    def __unicode__(self):
+        return self.report_id
+

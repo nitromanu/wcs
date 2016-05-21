@@ -1,11 +1,12 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from result.models import studentResponse, feedback
+from result.models import studentResponse, feedback , monthlyReport
 from django.http import HttpResponse, Http404
 from quiz.models import Questions, Feedback
 from django.db.models import Q
 import json
 from reportlab.pdfgen import canvas
+import traceback
 
 
 # Create your views here.
@@ -111,3 +112,55 @@ def feedback_msg(request):
         return HttpResponse(json.dumps(data_return), content_type='application/json')
     else:
         raise Http404
+
+
+def monthly_report(request,report_id):
+    username = request.user.username
+    try:
+        report_questions = monthlyReport.objects.get(report_id=report_id)
+        question_sets = report_questions.qsets_include
+        question_sets_json = json.loads(question_sets)
+        weeks_list = []
+        for items in question_sets_json:
+            weeks_list.append(items)
+        studentData = studentResponse.objects.filter(username = username)
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+        p = canvas.Canvas(response)
+        p.drawImage("/home/kurakar/Pictures/wback.jpg",0,0,mask='auto')
+        weeks = ""
+        for items in weeks_list:
+          weeks =  weeks+items+","
+
+        height_inital = 550
+        initial_margin = 40
+        serial_number = 1
+
+        # p.drawString(initial_margin, height_inital+100, "Dear "+request.user.first_name.capitalize()+" "+request.user.last_name.capitalize())
+        p.drawString(initial_margin, height_inital+100, "Dear Student")
+
+        p.drawString(40, 80, "For Generating the report we have considered "+weeks+".")
+        p.drawString(40, 60, "If any of the week is missing, that means you have not attended that test.")
+
+
+        for studentResult in studentData:
+            if studentResult.questionSetID in weeks_list:
+
+                # Draw things on the PDF. Here's where the PDF generation happens.
+                # See the ReportLab documentation for the full list of functionality.
+                sections = json.loads(studentResult.sectionResults)
+                p.drawString(initial_margin, height_inital, str(serial_number))
+                p.drawString(initial_margin+55, height_inital, studentResult.questionSetID)
+                p.drawString(initial_margin+170, height_inital, str(sections["sectionsName"][0]))
+                p.drawString(initial_margin+380, height_inital, str(studentResult.marksObtained))
+                height_inital -= 50
+                serial_number+=1
+
+                # Close the PDF object cleanly, and we're done.
+        p.showPage()
+        p.save()
+        return response
+    except:
+        # Raises 404 error if report id not exist
+       raise Http404
+
