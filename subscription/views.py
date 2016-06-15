@@ -24,6 +24,7 @@ def create_vouchers(request):
             category_code = request.POST.get('category_code')
             agent_code = request.POST.get('agent_code')
             amount = int(request.POST.get('amount'))
+            days = int(request.POST.get('days'))
             voucher_increment = 0
             voucher_list = []
             while voucher_increment < voucher_count:
@@ -33,7 +34,7 @@ def create_vouchers(request):
                 expiry_date = current_date + timedelta(60)
                 voucher_data = payment_voucher(voucher_number=voucher_code, category_code=category_code,
                                                voucher_agent_code=agent_code, created_date=current_date,
-                                               expiry_date=expiry_date, voucher_price=amount)
+                                               expiry_date=expiry_date, voucher_price=amount,number_of_days = days)
                 voucher_data.save()
                 voucher_increment += 1
             context = {'vouchers': voucher_list}
@@ -72,9 +73,10 @@ def payment_voucher_ajax_request(request):
 
                     update_subscription = subscriptions.objects.filter(username = username)
                     try:
+                        days = check_voucher.number_of_days
                         update_subscription = subscriptions.objects.get(username = username)
                         end_date = update_subscription.end_date
-                        new_end_date = end_date + timedelta(30)
+                        new_end_date = datetime.now() + timedelta(days)
                         update_subscription.end_date = new_end_date
                         update_subscription.save()
                     except:

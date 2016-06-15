@@ -11,6 +11,7 @@ class paymentVoucher(models.Model):
     is_active = models.IntegerField(default=1)
     voucher_agent_code = models.CharField(max_length=255)
     used_by = models.CharField(max_length=255)
+    number_of_days = models.IntegerField(default=30)
 
     def __unicode__(self):
         return self.voucher_number

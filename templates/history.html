@@ -135,7 +135,7 @@
 {#                                alertify.message('Status: ' + response.message);#}
                                 if(response.status == 'success')
                                 {
-                                    current.replaceWith('<div class="expiry">Subscription Ends on: 12/15/2016<br> Click to Extend Subscription</div>');
+                                    current.replaceWith('<div class="expiry">Subscription Renewed</div>');
                                     alertify.notify( response.message, 'success', 5, function(){  console.log('dismissed'); });
                                 }
 

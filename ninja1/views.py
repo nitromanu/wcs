@@ -21,15 +21,28 @@ def user_login(request):
             login_details = request.POST
             user_name = login_details.get('username')
             password = login_details.get('password')
+            next_url = login_details.get('next')
+            error_message = None
             user = authenticate(username=user_name, password=password)
             if user is not None:
                 if user.is_active:
                     login(request, user)
-                    return HttpResponseRedirect("/home/")
+                    if next_url:
+                        return HttpResponseRedirect(next_url)
+                    else:
+                        return HttpResponseRedirect("/home/")
+
                 else:
                     return HttpResponse('Your user account disabled')
             else:
-                return HttpResponse(user_name)
+                error_message = "Incorrect Username or Password"
+                context = {
+                'message':error_message,
+                    'username':user_name,
+                    'password':password
+            }
+
+                return render(request, 'login.html',context )
 
         else:
             return render(request, 'login.html')
@@ -81,6 +94,10 @@ def render_register(request):
 def user_home(request):
     username = request.user.username
     subscription_data = user_subscribtion.objects.filter(username = username)
+    user_marks  = student_response.objects.filter(username = username)
+    marks_data = False
+    if user_marks.exists():
+        marks_data = True
     date_today = datetime.date.today()
     question_data = questions.objects.filter(Q(startDate__lte=date_today) & Q(endDate__gte=date_today))
     if question_data.exists():
@@ -101,7 +118,10 @@ def user_home(request):
         'subscription':subscription_data,
         'is_active':is_active,
         'question_active':question_active,
-        'question_data':question_data
+        'question_data':question_data,
+        'marks_data':marks_data,
+        'user_marks':user_marks,
+        'name':request.user.first_name
     }
     return render(request,'account.html',context)
 

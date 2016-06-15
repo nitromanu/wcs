@@ -44,15 +44,15 @@
 
 
         <div class="row performance">
-            <div class="col-md-7 my-tests">
-                <h2>Weekly Quiz</h2>
+            <div class="col-md-4 my-tests">
+{#                <h2>Weekly Quiz</h2>#}
             <b> Subscription End Date :</b> {% if subscription.end_date == None %} You have not activated {% else %}{{ subscription.end_date|date:"M d, Y" }} {% endif %}
                 <div class="row week-quiz">
                     <div class="quiz-head">
-                        WWCS QUIZ : {{ question_data.startDate|date:"M d, Y" }} - {{ question_data.endDate|date:"M d, Y" }}
+                        Quiz Period : {{ question_data.startDate|date:"M d, Y" }} - {{ question_data.endDate|date:"M d, Y" }}
                     </div>
                     <div class="quiz-description">
-                        <h2>Walk With a Civil Servant Quiz</h2>
+                        <h3>Weekly Quiz</h3>
                     </div>
                 {% if question_active %}
 
@@ -77,29 +77,23 @@
                 </div>
             </div>
 
-            <div class="graph col-md-5">
-                        <h2> Leader Board</h2>
 
-                <h3> Will be updated soon</h3>
+            <div class="col-md-8 my-tests">
+{#                <h2>Weekly Quiz</h2>#}
+                <b> Your Performance</b>
 
-{#                <div class="student-name row">#}
-{#                    <div class="col-md-3 student-photo"> Photo</div>#}
-{#                    <div class="col-md-9 student-details">#}
-{#                    <b>Manu Kurakar</b>#}
-{#                        <br>#}
-{#                    St. Gregorious Higher Seconday, Kottarakara#}
-{#                    </div>#}
-{##}
-{#                </div>#}
+                {% if marks_data %}
+                    <canvas id="myChart" width="100" height="200"></canvas>
+
+                    {% else %}
+                     Attempt test to generate performance graph.
+                {% endif %}
+
             </div>
+
+
         </div>
-        
-        
-        
-        
-        
-        
-        
+
     </div>
     
 
@@ -133,8 +127,9 @@
   <script type="text/javascript" src="https://dl.dropboxusercontent.com/spa/0cc22uwk8niobo3/StartMyTest/public/js/smoothscroll.js"></script>
   <script type="text/javascript" src="https://dl.dropboxusercontent.com/spa/0cc22uwk8niobo3/StartMyTest/public/js/jquery-func.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-beta1/jquery.min.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.3/Chart.js"></script>
    <script src="//cdn.jsdelivr.net/alertifyjs/1.6.1/alertify.min.js"></script>
+
     <script>
 
 
@@ -229,11 +224,107 @@
         }
     };
         
-
-
-        
        
     </script>
+
+
+  <script>
+var ctx = document.getElementById("myChart");
+
+var data = {
+    labels: [{% for items in user_marks %} "{{ items.questionSetID }}",{% endfor %}],
+    datasets: [
+        {
+            label: "Marks obtained by {{ name }}",
+            fill: false,
+            lineTension: 0.1,
+            backgroundColor: "rgba(75,192,192,0.4)",
+            borderColor: "rgba(75,192,192,1)",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "rgba(75,192,192,1)",
+            pointBackgroundColor: "#fff",
+            pointBorderWidth: 1,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)",
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+            data: [{% for items in user_marks %} {{ items.marksObtained }},{% endfor %}],
+        }
+    ]
+};
+
+var options = {
+
+    ///Boolean - Whether grid lines are shown across the chart
+    scaleShowGridLines : true,
+
+    //String - Colour of the grid lines
+    scaleGridLineColor : "rgba(0,0,0,.05)",
+
+    //Number - Width of the grid lines
+    scaleGridLineWidth : 1,
+
+    //Boolean - Whether to show horizontal lines (except X axis)
+    scaleShowHorizontalLines: true,
+
+    //Boolean - Whether to show vertical lines (except Y axis)
+    scaleShowVerticalLines: true,
+
+    //Boolean - Whether the line is curved between points
+    bezierCurve : false,
+
+    //Number - Tension of the bezier curve between points
+    bezierCurveTension : 0.4,
+
+    //Boolean - Whether to show a dot for each point
+    pointDot : true,
+
+    //Number - Radius of each point dot in pixels
+    pointDotRadius : 4,
+
+    //Number - Pixel width of point dot stroke
+    pointDotStrokeWidth : 1,
+
+    //Number - amount extra to add to the radius to cater for hit detection outside the drawn point
+    pointHitDetectionRadius : 20,
+
+    //Boolean - Whether to show a stroke for datasets
+    datasetStroke : true,
+
+    //Number - Pixel width of dataset stroke
+    datasetStrokeWidth : 2,
+
+    //Boolean - Whether to fill the dataset with a colour
+    datasetFill : true,
+
+    //String - A legend template
+{#    legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>",#}
+
+    multiTooltipTemplate: "<%= datasetLabel %> - <%= value %>",
+
+    // Boolean - whether or not the chart should be responsive and resize when the browser does.
+
+	responsive: true,
+
+	// Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container
+
+	maintainAspectRatio: false
+
+};
+
+var myLineChart = new Chart(ctx, {
+    type: 'line',
+    data: data,
+    options: options
+});
+
+
+</script>
 
 <style>
 
@@ -255,6 +346,11 @@
         text-align: center;
         font-size: 30px;
         font-weight: bolder;
+    }
+
+    .quiz-head
+    {
+        font-size: 20px;
     }
 </style>
     

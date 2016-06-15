@@ -26,6 +26,7 @@ urlpatterns = patterns('',
                        url(r'^pdf/$', result_views.pdf_try),
                        url(r'^teacher/$', result_views.admin_result),
                        url(r'^feedback/$', result_views.feedback_msg),
+                       url('^', include('django.contrib.auth.urls')),
 
 
 )
