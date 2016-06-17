@@ -12,6 +12,7 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
                        url(r'^$', views.home),
+                       url(r'^dashboard/$', views.dashboard),
                        url(r'^register/$', views.render_register),
                        url(r'^login/$', views.user_login),
                        url(r'^home/$', views.user_home),

@@ -1,10 +1,11 @@
 from django.shortcuts import render
-from django.http import HttpResponse,HttpResponseRedirect
+from django.http import HttpResponse,HttpResponseRedirect, Http404
 from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from forms import RegistrationForm, LoginForm
 from models import UserProfile as user_profile
-from subscription.models import subscriptionDetails as user_subscribtion
+from subscription.models import subscriptionDetails as user_subscribtion, paymentVoucher as pay_voucher
 from result.models import studentResponse as student_response
 import datetime
 from quiz.models import Questions as questions
@@ -147,3 +148,26 @@ def user_account(request):
         'student_response_data':student_response_data
     }
     return render(request,'history.html',context)
+
+@login_required(login_url='/login/')
+def dashboard(request):
+    if request.user.is_staff:
+        users  = User.objects.all()
+        date_today = datetime.date.today()
+        subscribed_users = user_subscribtion.objects.filter(end_date__gte = date_today)
+        voucher_15_days = len(pay_voucher.objects.filter(number_of_days = 15))
+        voucher_30_days = len(pay_voucher.objects.filter(number_of_days = 30))
+        voucher_15_active = len(pay_voucher.objects.filter(Q(number_of_days=15) & Q(is_active=1)))
+        voucher_30_active = len(pay_voucher.objects.filter(Q(number_of_days=30) & Q(is_active=1)))
+        total_users = len(users)
+        context = {
+            'total_users':total_users,
+            'active_subscriptions': len(subscribed_users),
+            'voucher_15':voucher_15_days,
+            'voucher_30':voucher_30_days,
+            'voucher_15_active':voucher_15_active,
+            'voucher_30_active':voucher_30_active
+        }
+        return render(request,'dashboard.html',context)
+    else:
+        raise Http404
