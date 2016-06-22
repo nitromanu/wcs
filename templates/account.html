@@ -46,7 +46,8 @@
         <div class="row performance">
             <div class="col-md-4 my-tests">
 {#                <h2>Weekly Quiz</h2>#}
-            <b> Subscription End Date :</b> {% if subscription.end_date == None %} You have not activated {% else %}{{ subscription.end_date|date:"M d, Y" }} {% endif %}
+{#                <b> Subscription End Date :</b> {% if subscription.end_date == None %} You have not activated {% else %}{{ subscription.end_date|date:"M d, Y" }} {% endif %}#}
+            <b> Question Sets Remaining :</b> {% if subscription.end_date == None %} Not Activated {% else %}{{ subscription.attempts_remaining }} {% endif %}
                 <div class="row week-quiz">
                     <div class="quiz-head">
                         Quiz Period : {{ question_data.startDate|date:"M d, Y" }} - {{ question_data.endDate|date:"M d, Y" }}
@@ -78,12 +79,12 @@
             </div>
 
 
-            <div class="col-md-8 my-tests">
+            <div class="col-md-8 ">
 {#                <h2>Weekly Quiz</h2>#}
                 <b> Your Performance</b>
 
                 {% if marks_data %}
-                    <canvas id="myChart" width="100" height="200"></canvas>
+                    <canvas id="myChart" width="100" height="170"></canvas>
 
                     {% else %}
                      Attempt test to generate performance graph.
@@ -92,7 +93,78 @@
             </div>
 
 
+
         </div>
+
+    <div class="col-md-4 package-details">
+        <h3> SCHEDULE </h3>
+
+        <div class="schedule">
+            Quiz 1: Civil Service<br>
+            21/06/2016 - 22/09/2016
+        </div>
+
+        <div class="schedule">
+            Quiz 1: Civil Service<br>
+            21/06/2016 - 22/09/2016
+        </div>
+
+        <div class="schedule">
+            Quiz 1: Civil Service<br>
+            21/06/2016 - 22/09/2016
+        </div>
+
+        <div class="schedule">
+            Quiz 1: Civil Service<br>
+            21/06/2016 - 22/09/2016
+        </div>
+
+
+
+
+
+    </div>
+
+    <div class="col-md-offset-1 col-md-3 package-details">
+        <h3> PACKAGES </h3>
+        <div>
+            <span class="package-amount">
+                Rs.199
+            </span>
+            <br>
+            <span> For 15 Days Subscription.</span>
+        </div>
+
+        <br><br>
+
+
+        <div>
+            <span class="package-amount">
+                Rs.299
+            </span>
+                <br>
+            <span> For 30 Days Subscription.</span>
+        </div>
+
+
+
+    </div>
+
+    <div class="col-md-offset-1 col-md-3 package-details">
+        <h3> PAYMENT ADDRESS </h3>
+        <p>Deposit/Online Transfer</p>
+            <b>Account Name:</b><br> M/S Walk With a Civil Servant<br>
+            <b>Account Number :</b><br> 48032200018939<br>
+            Bank : SYNDICATE BANK <br>
+            Branch : KOZHENCHERRY <br>
+            IFSC Code: SYNB0004803
+
+
+    </div>
+
+
+
+
 
     </div>
     
@@ -351,6 +423,47 @@ var myLineChart = new Chart(ctx, {
     .quiz-head
     {
         font-size: 20px;
+    }
+
+    .performance
+    {
+        min-height: 10px;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    .package-details
+    {
+        background-color: white;
+        min-height: 300px;
+        max-height: 300px;
+        margin-bottom: 20px;
+        text-align: center;
+        background-color: #2c3e50;
+        color: white;
+    }
+    .package-details h3
+    {
+        background-color: cadetblue;
+        color: white;
+        text-align: center;
+    }
+
+    .my-tests
+    {
+        min-height: 0px;
+    }
+
+    .schedule
+    {
+        background-color: #D8D8D8;
+        color: black;
+        margin-bottom: 10px;
+    }
+
+    .package-amount
+    {
+        font-size: 25px;
     }
 </style>
     

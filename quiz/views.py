@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from quiz.models import Questions as questions
+from subscription.models import subscriptionDetails
 from result.models import studentResponse
 from django.db.models import Q
 import datetime
@@ -46,8 +47,12 @@ def get_student_response(request):
         question_set_id = student_response_data.get('questionID')
         serialized_student_response = student_response_data.get('studentResponse')
         student_response_in_json = json.loads(student_response_data.get('studentResponse'))
+
         question_data_from_database, student_response_valid = fetch_question_data_and_validate(question_set_id,
                                                                                                student_response_in_json)
+
+        subscri_data = subscriptionDetails.objects.get(username = username)
+        attempts_remaining = subscri_data.attempts_remaining
         if question_set_exist(question_set_id) and student_response_valid and \
                 check_user_attempted_question_set(username, question_set_id):
 
@@ -141,6 +146,9 @@ def get_student_response(request):
                                              totalWrongAnswer=total_wrong_answers, totalTimeTaken=total_time_taken,
                                              totalUnAttempted=total_unattempted, totalAttempted=total_attempted)
             student_result.save()
+            attempts_remaining -= 1
+            subscri_data.attempts_remaining = attempts_remaining
+            subscri_data.save()
 
             redirect_url = "/result/" + question_set_id + "/"
 

@@ -108,7 +108,8 @@ def user_home(request):
         question_active = 0
     if subscription_data.exists():
         subscription_data = subscription_data[0]
-        if subscription_data.end_date < datetime.date.today():
+        # if subscription_data.end_date < datetime.date.today():
+        if subscription_data.attempts_remaining <= 0:
             is_active = 0
         else:
             is_active = 1

@@ -12,6 +12,7 @@ class paymentVoucher(models.Model):
     voucher_agent_code = models.CharField(max_length=255)
     used_by = models.CharField(max_length=255)
     number_of_days = models.IntegerField(default=30)
+    total_attempts = models.IntegerField(default=4)
 
     def __unicode__(self):
         return self.voucher_number
@@ -22,6 +23,7 @@ class subscriptionDetails(models.Model):
     start_date = models.DateField(default=None)
     end_date = models.DateField(default=None)
     voucher_number = models.CharField(max_length=255)
+    attempts_remaining = models.IntegerField(default=0)
 
     def __unicode__(self):
         return self.username

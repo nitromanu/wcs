@@ -74,10 +74,14 @@ def payment_voucher_ajax_request(request):
                     update_subscription = subscriptions.objects.filter(username = username)
                     try:
                         days = check_voucher.number_of_days
+                        attempts = check_voucher.total_attempts
                         update_subscription = subscriptions.objects.get(username = username)
                         end_date = update_subscription.end_date
                         new_end_date = datetime.now() + timedelta(days)
                         update_subscription.end_date = new_end_date
+                        attempts_remaining = update_subscription.attempts_remaining
+                        new_attempts = attempts_remaining+attempts
+                        update_subscription.attempts_remaining = new_attempts
                         update_subscription.save()
                     except:
                         create_subscription = subscriptions(username = username ,

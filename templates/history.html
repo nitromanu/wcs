@@ -46,7 +46,8 @@
         <div class="row performance">
             <div class="col-md-9 my-tests">
                 <div class="expiry">
-                    Subscription Ends on: {% if subscription.end_date == None %} You have not activated {% else %}{{ subscription.end_date|date:"M d, Y" }} {% endif %}
+{#                    Subscription Ends on: {% if subscription.end_date == None %} You have not activated {% else %}{{ subscription.end_date|date:"M d, Y" }} {% endif %}#}
+                    Question Sets Remaining: {% if subscription.end_date == None %} You have not activated {% else %}{{ subscription.attempts_remaining }} {% endif %}
                     <br>
                     Click to Extend Subscription
                 </div>
