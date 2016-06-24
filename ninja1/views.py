@@ -97,12 +97,16 @@ def user_home(request):
     subscription_data = user_subscribtion.objects.filter(username = username)
     user_marks  = student_response.objects.filter(username = username)
     marks_data = False
+    attempted = False
     if user_marks.exists():
         marks_data = True
     date_today = datetime.date.today()
     question_data = questions.objects.filter(Q(startDate__lte=date_today) & Q(endDate__gte=date_today))
     if question_data.exists():
         question_data = question_data[0]
+        response_data = student_response.objects.filter(Q(username=username) & Q(questionSetID=question_data.questionSetID))
+        if response_data.exists():
+            attempted = True
         question_active = 1
     else:
         question_active = 0
@@ -123,7 +127,8 @@ def user_home(request):
         'question_data':question_data,
         'marks_data':marks_data,
         'user_marks':user_marks,
-        'name':request.user.first_name
+        'name':request.user.first_name,
+        'attempted':attempted
     }
     return render(request,'account.html',context)
 

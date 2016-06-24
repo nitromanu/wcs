@@ -15,6 +15,45 @@ def attempt_quiz(request):
     username = request.user.username
     date_today = datetime.date.today()
     question_data = questions.objects.filter(Q(startDate__lte=date_today) & Q(endDate__gte=date_today))
+    user_active = 1
+    user_subscri_details = subscriptionDetails.objects.filter(username=username)
+    if user_subscri_details.exists():
+        if user_subscri_details[0].attempts_remaining <=0:
+            user_active = 0
+    else:
+        user_active = 0
+
+    if user_active:
+        if question_data.exists():
+            question_data_from_database = question_data[0]
+            question_id = question_data_from_database.questionSetID
+            if check_user_attempted_question_set(username, question_id):
+                questions_to_display = json.loads(question_data_from_database.questionsJson)
+                total_questions = len(questions_to_display)
+                total_time = question_data_from_database.totalTime
+                category_code = question_data_from_database.categoryCode
+                context = {
+                    'qid': question_id,
+                    'categoryCode': category_code,
+                    'questionData': questions_to_display,
+                    'totalQuesions': total_questions,
+                    'totalTime': total_time
+                }
+                return render(request, 'frame.html', context)
+            else:
+                redirect_url = '/result/' + question_id
+                return HttpResponseRedirect(redirect_url)
+        else:
+            return HttpResponse('Question Set Not Exist')
+    else:
+        return HttpResponse("Your test credit is 0. Please contact our team for credit purchase")
+
+
+@login_required(login_url='/login/')
+def sample(request):
+    username = request.user.username
+    date_today = datetime.date.today()
+    question_data = questions.objects.filter(questionSetID = 'sample')
     if question_data.exists():
         question_data_from_database = question_data[0]
         question_id = question_data_from_database.questionSetID
@@ -146,9 +185,10 @@ def get_student_response(request):
                                              totalWrongAnswer=total_wrong_answers, totalTimeTaken=total_time_taken,
                                              totalUnAttempted=total_unattempted, totalAttempted=total_attempted)
             student_result.save()
-            attempts_remaining -= 1
-            subscri_data.attempts_remaining = attempts_remaining
-            subscri_data.save()
+            if question_set_id != 'sample':
+                attempts_remaining -= 1
+                subscri_data.attempts_remaining = attempts_remaining
+                subscri_data.save()
 
             redirect_url = "/result/" + question_set_id + "/"
 

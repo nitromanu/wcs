@@ -71,9 +71,9 @@ def payment_voucher_ajax_request(request):
                     current_date = datetime.now()
                     end_date  = current_date +timedelta(30)
 
-                    update_subscription = subscriptions.objects.filter(username = username)
+
+                    days = check_voucher.number_of_days
                     try:
-                        days = check_voucher.number_of_days
                         attempts = check_voucher.total_attempts
                         update_subscription = subscriptions.objects.get(username = username)
                         end_date = update_subscription.end_date
@@ -87,7 +87,8 @@ def payment_voucher_ajax_request(request):
                         create_subscription = subscriptions(username = username ,
                                                             start_date = current_date ,
                                                             end_date = end_date,
-                                                            voucher_number = voucher_code_input)
+                                                            voucher_number = voucher_code_input,
+                                                            attempts_remaining = days)
                         create_subscription.save()
 
                     check_voucher.is_active = 0

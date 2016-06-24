@@ -47,22 +47,24 @@
             <div class="col-md-4 my-tests">
 {#                <h2>Weekly Quiz</h2>#}
 {#                <b> Subscription End Date :</b> {% if subscription.end_date == None %} You have not activated {% else %}{{ subscription.end_date|date:"M d, Y" }} {% endif %}#}
-            <b> Question Sets Remaining :</b> {% if subscription.end_date == None %} Not Activated {% else %}{{ subscription.attempts_remaining }} {% endif %}
+            <b> Test Credits Remaining :</b> {% if subscription.end_date == None %} Not Activated {% else %}{{ subscription.attempts_remaining }} {% endif %}
                 <div class="row week-quiz">
                     <div class="quiz-head">
                         Quiz Period : {{ question_data.startDate|date:"M d, Y" }} - {{ question_data.endDate|date:"M d, Y" }}
                     </div>
                     <div class="quiz-description">
                         <h3>Weekly Quiz</h3>
+                        <h4 id="sample" style="color: red">Click here for sample test </h4>
                     </div>
                 {% if question_active %}
 
                     {% if is_active %}
-                        <a href="/attempt/">
-                            <div class="quiz-attempt">
+
+                            <div class="quiz-attempt" id="attempt">
                             Attempt Now
+
                             </div>
-                        </a>
+
                         {% else %}
                     <div class="quiz-subscribe">
                         Subscribe Now
@@ -132,7 +134,7 @@
                 Rs.199
             </span>
             <br>
-            <span> For 15 Days Subscription.</span>
+            <span> For Two(2) Test Credits.</span>
         </div>
 
         <br><br>
@@ -143,7 +145,9 @@
                 Rs.299
             </span>
                 <br>
-            <span> For 30 Days Subscription.</span>
+            <span> For Four(4) Test Credits.</span>
+            <br> <br> 
+            Contact  :<b> 9446113911 </b>  for more information
         </div>
 
 
@@ -157,7 +161,8 @@
             <b>Account Number :</b><br> 48032200018939<br>
             Bank : SYNDICATE BANK <br>
             Branch : KOZHENCHERRY <br>
-            IFSC Code: SYNB0004803
+            IFSC Code: SYNB0004803<br>
+            WWCS Phone : 9446113911
 
 
     </div>
@@ -204,6 +209,39 @@
 
     <script>
 
+        $('#sample').click(function(){
+            alertify.confirm('Are you sure to proceed?', 'This is a sample test. Please subscribe for taking more tests.' +
+                    '  <br><br> This test contains <b> 25 Questions </b>. One marks for each correct answer and negative 0.25 for' +
+                    'each incorrect answer. Total time for test is 5 Minutes. Test will be automatically submitted when timer expires.' +
+                    ' <br><br> Please note that, test once attempted cannot ' +
+                    're-attempted.', function()
+                    {window.location.href = "/sample/";}
+                , function(){ alertify.error('Cancel')});
+        });
+
+        {% if attempted %}
+
+            $('#attempt').click(function(){
+            alertify.confirm('You have already attempted this test', ' You have already attempted the test. Click <b> Ok </b> to view the result. ' +
+                    'Kindly check the test schedule given below to know more information about the next ' +
+                    'test date. ', function()
+                    {window.location.href = "/attempt/";}
+                , function(){ alertify.error('Cancel')});
+        });
+
+        {% else %}
+        $('#attempt').click(function(){
+            alertify.confirm('Are you sure to proceed?', 'Welcome to WWCS tests series. You have<b> {{ subscription.attempts_remaining }} Test Credits </b> remaining. Your Test Credits decrease by one after attempting this test. Please subscribe for more Test Credits.' +
+                    '  <br><br> This test contains <b> 25 Questions </b>. One marks for each correct answer and negative 0.25 for' +
+                    'each incorrect answer. Total time for test is 30 Minutes. Test will be automatically submitted when timer expires.' +
+                    ' <br><br> Please note that, test once attempted cannot ' +
+                    're-attempted.', function()
+                    {window.location.href = "/attempt/";}
+                , function(){ alertify.error('Cancel')});
+        });
+
+        {% endif %}
+
 
     var current = 0;
         $('.quiz-subscribe').click(function(){
@@ -226,8 +264,9 @@
 {#                                alertify.message('Status: ' + response.message);#}
                                 if(response.status == 'success')
                                 {
-                                    current.parent().replaceWith('<a href="/attempt/"><div class="voucher-success"> Attempt Now</div></a>');
-                                    alertify.notify( response.message, 'success', 5, function(){  console.log('dismissed'); });
+                                    alert('Activation Success, Your account credited with test credits');
+                                    current.parent().replaceWith('<div class="voucher-success" id="attempt"> Attempt Now</div>');
+                                    window.location.href = "/home/";
                                 }
 
                                 else
